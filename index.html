@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>QCQM 研究中心 | 量子計算與量子材料</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo"><a href="index.html">QCQM Research Center</a></div>
+  <div class="nav-container">
+    <ul>
+      <li><a href="index.html">首頁</a></li>
+      <li><a href="pages/zh/about.html">關於中心</a></li>
+      <li><a href="pages/zh/research.html">研究領域</a></li>
+      <li><a href="pages/zh/people.html">成員介紹</a></li>
+      <li><a href="pages/zh/news.html">最新消息與活動</a></li>
+    </ul>
+    <div class="lang-switch">
+      <a href="index.html" class="active">中文</a> | <a href="index_en.html">EN</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <canvas id="quantum-canvas"></canvas>
+  <div class="hero-content">
+    <h1 style="font-size: 2.8rem; margin-bottom: 10px;">
+      量子計算與量子材料研究中心<br>
+      <span style="font-size: 1.8rem; font-weight: 300; opacity: 0.9;">Research Center for Quantum Computing and Quantum Materials</span>
+    </h1>
+    <p style="font-size: 1.4rem; letter-spacing: 1px;">
+      國立中山大學 (National Sun Yat-sen University)
+    </p>
+  </div>
+</header>
+
+<section class="section">
+  <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+    <h2 style="color: var(--primary-blue); margin-bottom: 30px;">中心使命 Mission</h2>
+    <p style="font-size: 1.1rem; line-height: 1.8; color: #444;">
+      本中心致力於推動前瞻量子計算架構與量子材料之研究。
+      我們整合了理論計算、材料成長、奈米製程及元件物理，
+      旨在建構跨領域的研發平台，引領台灣在量子科技領域的創新與突破。
+    </p>
+  </div>
+</section>
+
+<footer>© QCQM Research Center, NSYSU</footer>
+
+<script>
+  // 量子粒子動態背景腳本
+  const canvas = document.getElementById('quantum-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+
+  function init() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    particles = [];
+    for(let i=0; i<80; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        r: Math.random() * 2 + 1
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    ctx.fillStyle = 'rgba(197, 160, 89, 0.5)'; // 量子金
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    
+    particles.forEach((p, i) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+      
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fill();
+
+      for(let j=i+1; j<particles.length; j++) {
+        let p2 = particles[j];
+        let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+        if(dist < 150) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.stroke();
+        }
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', init);
+  init();
+  draw();
+</script>
+
+</body>
+</html>
